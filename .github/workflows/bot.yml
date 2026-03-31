@@ -1,0 +1,22 @@
+name: Scraping Licitaciones
+
+on:
+  workflow_dispatch
+  schedule:
+    - cron: "0 10 * * 1,3,5"
+
+jobs:
+  scraping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update && sudo apt-get install -y firefox-geckodriver firefox
+      - run: pip install -r requirements.txt
+      - run: python main.py
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
